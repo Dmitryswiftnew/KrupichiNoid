@@ -1,9 +1,4 @@
-//
-//  GameViewController.swift
-//  KrupichiNoid
-//
-//  Created by Dmitry on 18.07.25.
-//
+
 
 import UIKit
 import SpriteKit
@@ -12,24 +7,24 @@ import GameplayKit
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
-                
-                // Present the scene
+            super.viewDidLoad()
+
+            if let view = self.view as? SKView {
+                // Создаем сцену с размером вью
+                let scene = GameScene(size: view.bounds.size)
+
+                // Важно! Масштаб по размеру вью, чтобы не было лишних отступов/масштабирования
+                scene.scaleMode = .resizeFill
+
                 view.presentScene(scene)
+
+                view.ignoresSiblingOrder = true
+
+                // Для отладки
+                view.showsFPS = true
+                view.showsNodeCount = true
             }
-            
-            view.ignoresSiblingOrder = true
-            
-            view.showsFPS = true
-            view.showsNodeCount = true
         }
-    }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {

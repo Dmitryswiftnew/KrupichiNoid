@@ -15,6 +15,9 @@
 		0A4D87672E2A267B0085C426 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87652E2A267B0085C426 /* Main.storyboard */; };
 		0A4D87692E2A267D0085C426 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87682E2A267D0085C426 /* Assets.xcassets */; };
 		0A4D876C2E2A267D0085C426 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D876A2E2A267D0085C426 /* LaunchScreen.storyboard */; };
+		0A4D87762E2A5C310085C426 /* stena.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87752E2A5C310085C426 /* stena.wav */; };
+		0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87772E2A5C3C0085C426 /* platform.wav */; };
+		0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87792E2A5C6D0085C426 /* otrizh.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +30,9 @@
 		0A4D87662E2A267B0085C426 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0A4D87682E2A267D0085C426 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A4D876B2E2A267D0085C426 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0A4D87752E2A5C310085C426 /* stena.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = stena.wav; sourceTree = "<group>"; };
+		0A4D87772E2A5C3C0085C426 /* platform.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = platform.wav; sourceTree = "<group>"; };
+		0A4D87792E2A5C6D0085C426 /* otrizh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = otrizh.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,8 +73,19 @@
 				0A4D87652E2A267B0085C426 /* Main.storyboard */,
 				0A4D87682E2A267D0085C426 /* Assets.xcassets */,
 				0A4D876A2E2A267D0085C426 /* LaunchScreen.storyboard */,
+				0A4D87722E2A588F0085C426 /* music */,
 			);
 			path = KrupichiNoid;
+			sourceTree = "<group>";
+		};
+		0A4D87722E2A588F0085C426 /* music */ = {
+			isa = PBXGroup;
+			children = (
+				0A4D87752E2A5C310085C426 /* stena.wav */,
+				0A4D87772E2A5C3C0085C426 /* platform.wav */,
+				0A4D87792E2A5C6D0085C426 /* otrizh.wav */,
+			);
+			path = music;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,10 +146,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A4D87762E2A5C310085C426 /* stena.wav in Resources */,
 				0A4D87672E2A267B0085C426 /* Main.storyboard in Resources */,
 				0A4D875E2E2A267B0085C426 /* GameScene.sks in Resources */,
 				0A4D87692E2A267D0085C426 /* Assets.xcassets in Resources */,
+				0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */,
 				0A4D876C2E2A267D0085C426 /* LaunchScreen.storyboard in Resources */,
+				0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */,
 				0A4D87602E2A267B0085C426 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,9 +333,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = vasilevVK.KrupichiNoid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -341,9 +365,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = vasilevVK.KrupichiNoid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
