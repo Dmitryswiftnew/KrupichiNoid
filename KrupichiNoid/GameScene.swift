@@ -20,68 +20,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var capsuleLayer: SKNode! // Контейнер для кирпичей (капсул)
     
     override func didMove(to view: SKView) {
+        // 🔧 1. Отключаем гравитацию — бургер не должен "падать"
+        physicsWorld.gravity = .zero
 
+        // ✅ делегат столкновений
         physicsWorld.contactDelegate = self
-        
-        
+
         backgroundColor = .black
-        
-        // Платформа (толстяк) — внизу экрана, учитываем высоту и небольшой отступ
+
+        // 🟢 Платформа (толстяк) — создаём её ПЕРВОЙ!
         fatman = SKSpriteNode(imageNamed: "fatman")
         fatman.size = CGSize(width: 150, height: 90)
-        fatman.position = CGPoint(x: frame.midX,
-                                  y: fatman.size.height / 2 + 20)  // 20 пунктов от низа
+        fatman.position = CGPoint(x: frame.midX, y: fatman.size.height / 2 + 20)
         fatman.zPosition = 3
         addChild(fatman)
-        
-        // Шар (бургер) — чуть выше платформы
-        burger = SKSpriteNode(imageNamed: "burger")
-        burger.size = CGSize(width: 30, height: 30)
-        burger.position = CGPoint(x: frame.midX,
-                                  y: fatman.position.y + fatman.size.height / 2 + burger.size.height / 2 + 10)
-        burger.zPosition = 4
-        addChild(burger)
-        
-        // Контейнер для кирпичей (капсул) и вызов создания капсул
-        capsuleLayer = SKNode()
-        capsuleLayer.zPosition = 2
-        addChild(capsuleLayer)
-        
-        // границы сцены
-        
-        
-        let borderPath = CGMutablePath()
-        borderPath.move(to: CGPoint(x: frame.minX, y: frame.minY))
-        borderPath.addLine(to: CGPoint(x: frame.minX, y: frame.maxY))
-        borderPath.addLine(to: CGPoint(x: frame.maxX, y: frame.maxY))
-        borderPath.addLine(to: CGPoint(x: frame.maxX, y: frame.minY))
-        
-        physicsBody = SKPhysicsBody(edgeChainFrom: borderPath)
-        physicsBody?.categoryBitMask = PhysicsCategory.border
-        physicsBody?.friction = 0
-        
-       
-        
-        // шарик
-        
-        burger.physicsBody = SKPhysicsBody(circleOfRadius: burger.size.width / 2)
-        burger.physicsBody?.isDynamic = true
-        burger.physicsBody?.friction = 0
-        burger.physicsBody?.restitution = 1
-        burger.physicsBody?.linearDamping = 0
-        burger.physicsBody?.angularDamping = 0
-        burger.physicsBody?.allowsRotation = false
-        burger.physicsBody?.categoryBitMask = PhysicsCategory.ball
-        burger.physicsBody?.contactTestBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
-        burger.physicsBody?.collisionBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
-        
-        
-        burger.physicsBody?.velocity = .zero // обнуляем скорость, чтоб не было базового движения
-        burger.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 300))
-        
-        
-        // платформа
-        
+
         fatman.physicsBody = SKPhysicsBody(rectangleOf: fatman.size)
         fatman.physicsBody?.isDynamic = false
         fatman.physicsBody?.restitution = 1
@@ -92,10 +45,55 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fatman.physicsBody?.categoryBitMask = PhysicsCategory.paddle
         fatman.physicsBody?.contactTestBitMask = PhysicsCategory.ball
         fatman.physicsBody?.collisionBitMask = PhysicsCategory.ball
+
+        // 🟠 Бургер (шарик)
+        burger = SKSpriteNode(imageNamed: "burger")
+        burger.size = CGSize(width: 30, height: 30)
+        burger.position = CGPoint(
+            x: frame.midX,
+            y: fatman.position.y + fatman.size.height / 2 + burger.size.height / 2 + 10
+        )
+        burger.zPosition = 4
+        addChild(burger)
+
+        burger.physicsBody = SKPhysicsBody(circleOfRadius: burger.size.width / 2)
+        burger.physicsBody?.isDynamic = true
+        burger.physicsBody?.friction = 0
+        burger.physicsBody?.restitution = 1
+        burger.physicsBody?.linearDamping = 0
+        burger.physicsBody?.angularDamping = 0
+        burger.physicsBody?.allowsRotation = false
+        burger.physicsBody?.categoryBitMask = PhysicsCategory.ball
+        burger.physicsBody?.contactTestBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
+        burger.physicsBody?.collisionBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
+        burger.physicsBody?.velocity = .zero
+
+        // ✅ Сильный начальный импульс по диагонали
+        burger.physicsBody?.applyImpulse(CGVector(dx: 200, dy: 200))
+
+        // 🟡 Границы сцены (edge loop)
+        let borderPath = CGMutablePath()
+        borderPath.move(to: CGPoint(x: frame.minX, y: frame.minY))
+        borderPath.addLine(to: CGPoint(x: frame.minX, y: frame.maxY))
+        borderPath.addLine(to: CGPoint(x: frame.maxX, y: frame.maxY))
+        borderPath.addLine(to: CGPoint(x: frame.maxX, y: frame.minY))
+        borderPath.closeSubpath()
+
+        physicsBody = SKPhysicsBody(edgeChainFrom: borderPath)
+        physicsBody?.categoryBitMask = PhysicsCategory.border
+        physicsBody?.friction = 0
+        physicsBody?.restitution = 1  // ✅ полностью упругое отражение
+
         
+        capsuleLayer = SKNode()
+        capsuleLayer.zPosition = 2
+        addChild(capsuleLayer)
         
+        // 🧱 Капсулы (кирпичи)
         setupCapsules()
     }
+
+
     
     func setupCapsules() {
         let capsuleWidth: CGFloat = 55
@@ -162,25 +160,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case PhysicsCategory.capsule:
             run(SKAction.playSoundFileNamed("otrizh.wav", waitForCompletion: false))
             otherBody.node?.removeFromParent()
-            
+
         case PhysicsCategory.paddle:
             run(SKAction.playSoundFileNamed("platform.wav", waitForCompletion: false))
-            
+
             if let ballNode = ballBody.node, let paddleNode = otherBody.node {
                 let ballX = ballNode.position.x
                 let paddleX = paddleNode.position.x
                 let halfWidth = paddleNode.frame.width / 2
-                
+
+                // Смещение от центра платформы (-1 до 1)
                 let offset = (ballX - paddleX) / halfWidth
-                
-                let horizontalSpeed = offset * 800
-                let verticalSpeed: CGFloat = 800
-                
-                ballBody.velocity = CGVector(dx: horizontalSpeed, dy: verticalSpeed)
+                let clampedOffset = max(-1, min(offset, 1)) // защита от выхода за пределы
+
+                // Угол отскока: -π/3 до +π/3 (то есть -60° до +60°)
+                let bounceAngle = clampedOffset * (.pi / 3)
+
+                let speed: CGFloat = 750.0 // фиксированная скорость
+                let dx = sin(bounceAngle) * speed
+                let dy = cos(bounceAngle) * speed
+
+                // Назначаем новую скорость бургеру
+                ballBody.velocity = CGVector(dx: dx, dy: dy)
             }
-            
+
         case PhysicsCategory.border:
             run(SKAction.playSoundFileNamed("stena.wav", waitForCompletion: false))
+
         default:
             break
         }
@@ -223,7 +229,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         guard let velocity = burger.physicsBody?.velocity else { return }
         
-        let maxSpeed: CGFloat = 700.0
+        let maxSpeed: CGFloat = 750.0
         
         let speed = sqrt(velocity.dx * velocity.dx + velocity.dy * velocity.dy)
         
