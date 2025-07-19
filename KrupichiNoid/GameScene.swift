@@ -35,7 +35,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fatman.zPosition = 3
         addChild(fatman)
 
-        fatman.physicsBody = SKPhysicsBody(rectangleOf: fatman.size)
+        let adjustedPlatformSize = CGSize(width: fatman.size.width * 0.8, height: fatman.size.height * 0.8)
+        fatman.physicsBody = SKPhysicsBody(rectangleOf: adjustedPlatformSize)
         fatman.physicsBody?.isDynamic = false
         fatman.physicsBody?.restitution = 1
         fatman.physicsBody?.friction = 0
@@ -45,6 +46,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fatman.physicsBody?.categoryBitMask = PhysicsCategory.paddle
         fatman.physicsBody?.contactTestBitMask = PhysicsCategory.ball
         fatman.physicsBody?.collisionBitMask = PhysicsCategory.ball
+        
+        
 
         // 🟠 Бургер (шарик)
         burger = SKSpriteNode(imageNamed: "burger")
@@ -56,7 +59,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         burger.zPosition = 4
         addChild(burger)
 
-        burger.physicsBody = SKPhysicsBody(circleOfRadius: burger.size.width / 2)
+        let adjustedRadius = burger.size.width / 2 * 0.8 // Уменьшаем радиус 
+        burger.physicsBody = SKPhysicsBody(circleOfRadius: adjustedRadius)
         burger.physicsBody?.isDynamic = true
         burger.physicsBody?.friction = 0
         burger.physicsBody?.restitution = 1
@@ -67,6 +71,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         burger.physicsBody?.contactTestBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
         burger.physicsBody?.collisionBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
         burger.physicsBody?.velocity = .zero
+        
+        
+        
 
         // ✅ Сильный начальный импульс по диагонали
         burger.physicsBody?.applyImpulse(CGVector(dx: 200, dy: 200))
@@ -127,13 +134,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 capsule.zPosition = 2
                 
                 
-                capsule.physicsBody = SKPhysicsBody(rectangleOf: capsule.size)
+                let adjustedCapsuleSize = CGSize(width: capsule.size.width * 0.8, height: capsule.size.height * 0.8)
+                capsule.physicsBody = SKPhysicsBody(rectangleOf: adjustedCapsuleSize)
                 capsule.physicsBody?.isDynamic = false
                 capsule.physicsBody?.categoryBitMask = PhysicsCategory.capsule
                 capsule.physicsBody?.contactTestBitMask = PhysicsCategory.ball
                 capsule.physicsBody?.collisionBitMask = PhysicsCategory.ball
                 
-             
+                
+           
                 capsuleLayer.addChild(capsule)
             }
         }
@@ -142,56 +151,106 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         let bodyA = contact.bodyA
         let bodyB = contact.bodyB
-
-        var ballBody: SKPhysicsBody
-        var otherBody: SKPhysicsBody
-
-        if bodyA.categoryBitMask == PhysicsCategory.ball {
-            ballBody = bodyA
-            otherBody = bodyB
-        } else if bodyB.categoryBitMask == PhysicsCategory.ball {
-            ballBody = bodyB
-            otherBody = bodyA
+        
+        // Чтобы удобнее работать, сортируем тела по категории
+        let firstBody: SKPhysicsBody
+        let secondBody: SKPhysicsBody
+        
+        if bodyA.categoryBitMask < bodyB.categoryBitMask {
+            firstBody = bodyA
+            secondBody = bodyB
         } else {
-            return
+            firstBody = bodyB
+            secondBody = bodyA
         }
+        
+        // Исправляем движение шарика если он "застрял" в горизонтали
+        if firstBody.categoryBitMask == PhysicsCategory.ball && secondBody.categoryBitMask == PhysicsCategory.border {
 
-        switch otherBody.categoryBitMask {
-        case PhysicsCategory.capsule:
-            run(SKAction.playSoundFileNamed("otrizh.wav", waitForCompletion: false))
-            otherBody.node?.removeFromParent()
-
-        case PhysicsCategory.paddle:
-            run(SKAction.playSoundFileNamed("platform.wav", waitForCompletion: false))
-
-            if let ballNode = ballBody.node, let paddleNode = otherBody.node {
-                let ballX = ballNode.position.x
-                let paddleX = paddleNode.position.x
-                let halfWidth = paddleNode.frame.width / 2
-
-                // Смещение от центра платформы (-1 до 1)
-                let offset = (ballX - paddleX) / halfWidth
-                let clampedOffset = max(-1, min(offset, 1)) // защита от выхода за пределы
-
-                // Угол отскока: -π/3 до +π/3 (то есть -60° до +60°)
-                let bounceAngle = clampedOffset * (.pi / 3)
-
-                let speed: CGFloat = 750.0 // фиксированная скорость
-                let dx = sin(bounceAngle) * speed
-                let dy = cos(bounceAngle) * speed
-
-                // Назначаем новую скорость бургеру
-                ballBody.velocity = CGVector(dx: dx, dy: dy)
-            }
-
-        case PhysicsCategory.border:
-            run(SKAction.playSoundFileNamed("stena.wav", waitForCompletion: false))
-
-        default:
-            break
+               if let ball = firstBody.node as? SKSpriteNode {
+                   correctBallAngle(ball)
+               }
+            // 🔊 звук столкновения со стеной
+                    run(SKAction.playSoundFileNamed("stena.wav", waitForCompletion: false))
+            
+           }
+        
+        
+        
+        // 1. Отскок бургера от платформы
+        if firstBody.categoryBitMask == PhysicsCategory.ball &&
+           secondBody.categoryBitMask == PhysicsCategory.paddle {
+            
+            guard let burgerNode = firstBody.node as? SKSpriteNode,
+                  let platformNode = secondBody.node as? SKSpriteNode else { return }
+            
+            let contactX = contact.contactPoint.x
+            let platformX = platformNode.position.x
+            let deltaX = contactX - platformX
+            
+            let normalized = deltaX / (platformNode.size.width / 2)
+            
+            // Максимальный угол отклонения - 60 градусов (π/3 радиан)
+            let maxBounceAngle = CGFloat.pi / 3
+            let bounceAngle = maxBounceAngle * normalized
+            
+            let currentVelocity = burgerNode.physicsBody?.velocity ?? CGVector(dx: 0, dy: 0)
+            let speed = sqrt(currentVelocity.dx * currentVelocity.dx + currentVelocity.dy * currentVelocity.dy)
+            
+            // Вычисляем скорость по X и Y
+            let dx = cos(bounceAngle) * speed
+            let dy = abs(sin(bounceAngle) * speed)  // всегда вверх
+            
+            // 🔊 звук столкновения с платформой
+                    run(SKAction.playSoundFileNamed("platform.wav", waitForCompletion: false))
+            
+            
+            burgerNode.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
+        }
+        
+        // 2. Уничтожение капсулы с анимацией
+        if firstBody.categoryBitMask == PhysicsCategory.ball &&
+           secondBody.categoryBitMask == PhysicsCategory.capsule {
+            
+            guard let capsuleNode = secondBody.node else { return }
+            
+            // 🔊 звук столкновения с капсулой
+                    run(SKAction.playSoundFileNamed("otrizh.wav", waitForCompletion: false))
+            
+            // Запускаем анимацию взрыва
+            runCapsuleDestructionEffect(at: capsuleNode.position)
+            
+            // Удаляем капсулу из сцены после анимации
+            capsuleNode.removeFromParent()
         }
     }
 
+// коррекция шарика
+    func correctBallAngle(_ ball: SKSpriteNode) {
+        let minVerticalSpeed: CGFloat = 100.0
+        let velocity = ball.physicsBody?.velocity ?? CGVector(dx: 0, dy: 0)
+
+        if abs(velocity.dy) < 10 {
+            let newDY = (velocity.dy >= 0 ? 1 : -1) * minVerticalSpeed
+            ball.physicsBody?.velocity = CGVector(dx: velocity.dx, dy: newDY)
+        }
+    }
+    
+    
+    
+    
+// разрушение капсулы
+    
+    func runCapsuleDestructionEffect(at position: CGPoint) {
+        let explosion = SKEmitterNode(fileNamed: "CapsuleExplosion.sks") ?? SKEmitterNode()
+        explosion.position = position
+        explosion.zPosition = 5
+        addChild(explosion)
+        
+        let wait = SKAction.wait(forDuration: 1.0)
+        let remove = SKAction.removeFromParent()
+        explosion.run(SKAction.sequence([wait, remove]))
+    }
 
     
     

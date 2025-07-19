@@ -18,6 +18,7 @@
 		0A4D87762E2A5C310085C426 /* stena.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87752E2A5C310085C426 /* stena.wav */; };
 		0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87772E2A5C3C0085C426 /* platform.wav */; };
 		0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87792E2A5C6D0085C426 /* otrizh.wav */; };
+		0A8842C52E2B846200D9AB53 /* CapsuleExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		0A4D87752E2A5C310085C426 /* stena.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = stena.wav; sourceTree = "<group>"; };
 		0A4D87772E2A5C3C0085C426 /* platform.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = platform.wav; sourceTree = "<group>"; };
 		0A4D87792E2A5C6D0085C426 /* otrizh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = otrizh.wav; sourceTree = "<group>"; };
+		0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CapsuleExplosion.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				0A4D875D2E2A267B0085C426 /* GameScene.sks */,
 				0A4D875F2E2A267B0085C426 /* Actions.sks */,
 				0A4D87612E2A267B0085C426 /* GameScene.swift */,
+				0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */,
 				0A4D87632E2A267B0085C426 /* GameViewController.swift */,
 				0A4D87652E2A267B0085C426 /* Main.storyboard */,
 				0A4D87682E2A267D0085C426 /* Assets.xcassets */,
@@ -148,6 +151,7 @@
 			files = (
 				0A4D87762E2A5C310085C426 /* stena.wav in Resources */,
 				0A4D87672E2A267B0085C426 /* Main.storyboard in Resources */,
+				0A8842C52E2B846200D9AB53 /* CapsuleExplosion.sks in Resources */,
 				0A4D875E2E2A267B0085C426 /* GameScene.sks in Resources */,
 				0A4D87692E2A267D0085C426 /* Assets.xcassets in Resources */,
 				0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */,
