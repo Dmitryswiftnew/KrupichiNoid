@@ -18,6 +18,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var burger: SKSpriteNode!
     var fatman: SKSpriteNode!
     var capsuleLayer: SKNode! // Контейнер для кирпичей (капсул)
+    var capsulesRemaining = 0
+    var isWinShown = false
     
     override func didMove(to view: SKView) {
         // 🔧 1. Отключаем гравитацию — бургер не должен "падать"
@@ -59,7 +61,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         burger.zPosition = 4
         addChild(burger)
 
-        let adjustedRadius = burger.size.width / 2 * 0.8 // Уменьшаем радиус 
+        let adjustedRadius = burger.size.width / 2 * 0.8 // Уменьшаем радиус
         burger.physicsBody = SKPhysicsBody(circleOfRadius: adjustedRadius)
         burger.physicsBody?.isDynamic = true
         burger.physicsBody?.friction = 0
@@ -103,10 +105,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
     func setupCapsules() {
+        
+        capsulesRemaining = 0
+        isWinShown = false
+        
         let capsuleWidth: CGFloat = 55
         let capsuleHeight: CGFloat = 24
         let rows = 4
-        let columns = 10
+        let columns = 6
         
         let horizontalSpacing: CGFloat = 10
         let verticalSpacing: CGFloat = 10
@@ -127,6 +133,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // Создаем капсулу (заменяем на картинку capsule)
                 let capsule = SKSpriteNode(imageNamed: "capsule")
                 capsule.size = CGSize(width: capsuleWidth, height: capsuleHeight)
+                capsule.name = "capsuleBrick"
 
                 let x = leftPadding + CGFloat(col) * (capsuleWidth + horizontalSpacing) + capsuleWidth / 2
                 let y = frame.height - topPadding - CGFloat(row) * (capsuleHeight + verticalSpacing) - capsuleHeight / 2
@@ -144,6 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
            
                 capsuleLayer.addChild(capsule)
+                capsulesRemaining += 1
             }
         }
     }
@@ -222,17 +230,71 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             // Удаляем капсулу из сцены после анимации
             capsuleNode.removeFromParent()
+            capsulesRemaining -= 1
+            print("capsulesRemaining: \(capsulesRemaining)") // для отладки
+            if capsulesRemaining <= 0 && !isWinShown {
+                isWinShown = true
+                showWinScreen()
+            }
         }
     }
 
+    
+    
+    // победа в игре
+    
+    
+    func showWinScreen() {
+        // удаляем мяч
+        burger.removeFromParent()
+        
+        let winLabel = SKLabelNode(text: "YOU WIN")
+        winLabel.fontSize = 50
+        winLabel.fontColor = .yellow
+        winLabel.fontName = "Avenir-Black"
+        winLabel.position = CGPoint(x: frame.midX, y: frame.midY)
+        winLabel.zPosition = 100
+        addChild(winLabel)
+        
+        // рестарт через паузу
+        
+        let wait = SKAction.wait(forDuration: 5)
+        let restartAction = SKAction.run {
+            if let view = self.view {
+                let scene  = GameScene(size: self.size)
+                scene.scaleMode = .aspectFill
+                view.presentScene(scene, transition: SKTransition.fade(withDuration: 0.5))
+            }
+            
+        }
+        run(SKAction.sequence([wait,restartAction]))
+        
+    }
+    
+    
+    
+    
+    
+    
 // коррекция шарика
     func correctBallAngle(_ ball: SKSpriteNode) {
-        let minVerticalSpeed: CGFloat = 100.0
-        let velocity = ball.physicsBody?.velocity ?? CGVector(dx: 0, dy: 0)
+        var velocity = ball.physicsBody?.velocity ?? .zero
+        let minVerticalSpeed: CGFloat = 300.0
+        let minHorizontalSpeed: CGFloat = 100.0
 
-        if abs(velocity.dy) < 10 {
-            let newDY = (velocity.dy >= 0 ? 1 : -1) * minVerticalSpeed
-            ball.physicsBody?.velocity = CGVector(dx: velocity.dx, dy: newDY)
+        // Если вертикальная скорость почти нулевая, корректируем угол отскока
+        if abs(velocity.dy) < minVerticalSpeed {
+            let totalSpeed = sqrt(velocity.dx * velocity.dx + velocity.dy * velocity.dy)
+            let signY: CGFloat = velocity.dy >= 0 ? 1 : -1
+            // Новое направление: сохранение "знака" движения, но задаём нужный угол
+            velocity.dy = signY * minVerticalSpeed
+            // Пересчитываем X, чтобы общий модуль остался прежним
+            velocity.dx = copysign(sqrt(max(0, totalSpeed * totalSpeed - velocity.dy * velocity.dy)), velocity.dx)
+            // Если dx стал слишком маленьким — задаём минимум для динамики
+            if abs(velocity.dx) < minHorizontalSpeed {
+                velocity.dx = copysign(minHorizontalSpeed, velocity.dx != 0 ? velocity.dx : 1)
+            }
+            ball.physicsBody?.velocity = velocity
         }
     }
     
