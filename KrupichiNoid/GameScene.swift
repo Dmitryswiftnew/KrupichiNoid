@@ -1,4 +1,5 @@
 import SpriteKit
+import AVFoundation
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -20,23 +21,74 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var capsuleLayer: SKNode! // Контейнер для кирпичей (капсул)
     var capsulesRemaining = 0
     var isWinShown = false
+    var currentLevel = 1
+    var speedMultiplier: CGFloat = 1.0
+    var levelLabel: SKLabelNode!
+    var isGameOver = false
+    
+    var backgroundMusicPlayer: AVAudioPlayer?
+    let winSound = SKAction.playSoundFileNamed("krpw", waitForCompletion: false)
+    let loseSound = SKAction.playSoundFileNamed("krpl", waitForCompletion: false)
+    
+    
+    
     
     override func didMove(to view: SKView) {
-        // 🔧 1. Отключаем гравитацию — бургер не должен "падать"
         physicsWorld.gravity = .zero
-
-        // ✅ делегат столкновений
         physicsWorld.contactDelegate = self
-
         backgroundColor = .black
+        
+        
+        playBackgroundMusic(filename: "8bitfon.wav")
+        backgroundMusicPlayer?.play()
+        isGameOver = false
+        
+        
+        
+        
+        
+        func playBackgroundMusic(filename: String) {
+            
+            backgroundMusicPlayer?.stop()
+            backgroundMusicPlayer = nil
+            
+            if let bundle = Bundle.main.path(forResource: filename, ofType: nil) {
+                let musicURL = URL(fileURLWithPath: bundle)
+                do {
+                    backgroundMusicPlayer = try AVAudioPlayer(contentsOf: musicURL)
+                    backgroundMusicPlayer?.numberOfLoops = -1
+                    backgroundMusicPlayer?.prepareToPlay()
+                    backgroundMusicPlayer?.play()
+                } catch {
+                    print("Could not load file: \(filename)")
+                }
+            }
+        }
 
-        // 🟢 Платформа (толстяк) — создаём её ПЕРВОЙ!
+
+        // добавление левала
+        
+        levelLabel = SKLabelNode(fontNamed: "Avenir-Black")
+        levelLabel.fontSize = 24
+        levelLabel.fontColor = .white
+        
+        levelLabel.position = CGPoint(x: 16, y: frame.height - 80)
+        
+        levelLabel.horizontalAlignmentMode = .left
+        levelLabel.verticalAlignmentMode = .baseline
+        
+        levelLabel.zPosition = 100
+        addChild(levelLabel)
+        
+        
+        
+        // Платформа
         fatman = SKSpriteNode(imageNamed: "fatman")
         fatman.size = CGSize(width: 150, height: 90)
         fatman.position = CGPoint(x: frame.midX, y: fatman.size.height / 2 + 20)
         fatman.zPosition = 3
         addChild(fatman)
-
+        
         let adjustedPlatformSize = CGSize(width: fatman.size.width * 0.8, height: fatman.size.height * 0.8)
         fatman.physicsBody = SKPhysicsBody(rectangleOf: adjustedPlatformSize)
         fatman.physicsBody?.isDynamic = false
@@ -49,38 +101,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fatman.physicsBody?.contactTestBitMask = PhysicsCategory.ball
         fatman.physicsBody?.collisionBitMask = PhysicsCategory.ball
         
-        
-
-        // 🟠 Бургер (шарик)
-        burger = SKSpriteNode(imageNamed: "burger")
-        burger.size = CGSize(width: 30, height: 30)
-        burger.position = CGPoint(
-            x: frame.midX,
-            y: fatman.position.y + fatman.size.height / 2 + burger.size.height / 2 + 10
-        )
-        burger.zPosition = 4
-        addChild(burger)
-
-        let adjustedRadius = burger.size.width / 2 * 0.8 // Уменьшаем радиус
-        burger.physicsBody = SKPhysicsBody(circleOfRadius: adjustedRadius)
-        burger.physicsBody?.isDynamic = true
-        burger.physicsBody?.friction = 0
-        burger.physicsBody?.restitution = 1
-        burger.physicsBody?.linearDamping = 0
-        burger.physicsBody?.angularDamping = 0
-        burger.physicsBody?.allowsRotation = false
-        burger.physicsBody?.categoryBitMask = PhysicsCategory.ball
-        burger.physicsBody?.contactTestBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
-        burger.physicsBody?.collisionBitMask = PhysicsCategory.paddle | PhysicsCategory.capsule | PhysicsCategory.border
-        burger.physicsBody?.velocity = .zero
-        
-        
-        
-
-        // ✅ Сильный начальный импульс по диагонали
-        burger.physicsBody?.applyImpulse(CGVector(dx: 200, dy: 200))
-
-        // 🟡 Границы сцены (edge loop)
+        // Границы сцены
         let borderPath = CGMutablePath()
         borderPath.move(to: CGPoint(x: frame.minX, y: frame.minY))
         borderPath.addLine(to: CGPoint(x: frame.minX, y: frame.maxY))
@@ -91,23 +112,78 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeChainFrom: borderPath)
         physicsBody?.categoryBitMask = PhysicsCategory.border
         physicsBody?.friction = 0
-        physicsBody?.restitution = 1  // ✅ полностью упругое отражение
+        physicsBody?.restitution = 1
 
-        
+        // Контейнер капсул
         capsuleLayer = SKNode()
         capsuleLayer.zPosition = 2
         addChild(capsuleLayer)
         
-        // 🧱 Капсулы (кирпичи)
-        setupCapsules()
+        // Запускаем уровень (создание капсул и шарика)
+        startLevel()
     }
 
 
+
+    func startLevel() {
+        // сбрасываем флаг победы
+     isWinShown = false
+        
+        levelLabel.text = "Level \(currentLevel)"
+        
+        
+        // удаляем старый шар
+        
+        burger?.removeFromParent()
+        //очищаем капсулы
+        for node in capsuleLayer.children {
+            node.removeFromParent()
+        }
+        
+        // Сброс счетчика капсул
+        capsulesRemaining = 0
+        
+        // создаем капсулы
+        setupCapsules()
+        
+        // Создаем шарик
+        burger = SKSpriteNode(imageNamed: "burger")
+        burger.size = CGSize(width: 30, height: 30)
+        burger.position = CGPoint(x: frame.midX, y: fatman.position.y + fatman.size.height / 2 + burger.size.height / 2 + 10)
+        burger.zPosition = 4
+        addChild(burger)
+        
+        
+        let adjustedRadius = burger.size.width / 2 * 0.8
+        burger.physicsBody = SKPhysicsBody(circleOfRadius: adjustedRadius)
+        burger.physicsBody?.isDynamic = true
+        burger.physicsBody?.friction = 0
+        burger.physicsBody?.restitution = 1
+        burger.physicsBody?.linearDamping = 0
+        burger.physicsBody?.angularDamping = 0
+        burger.physicsBody?.allowsRotation = false
+        burger.physicsBody?.categoryBitMask = PhysicsCategory.ball
+        burger.physicsBody?.contactTestBitMask = PhysicsCategory.paddle |
+        PhysicsCategory.capsule | PhysicsCategory.border
+        burger.physicsBody?.collisionBitMask = PhysicsCategory.paddle |
+        PhysicsCategory.capsule | PhysicsCategory.border
+        burger.physicsBody?.velocity = .zero
+        
+        // Начальный импульс с учётом текущего множителя скорости
+        let baseImpulse: CGFloat = 200
+        let impulse = baseImpulse * speedMultiplier
+        burger.physicsBody?.applyImpulse(CGVector(dx: impulse, dy: impulse))
+        
+        if !(backgroundMusicPlayer?.isPlaying ?? false) && !isGameOver {
+            backgroundMusicPlayer?.play()
+        }
+        
+    }
+    
     
     func setupCapsules() {
         
-        capsulesRemaining = 0
-        isWinShown = false
+        
         
         let capsuleWidth: CGFloat = 55
         let capsuleHeight: CGFloat = 24
@@ -234,12 +310,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("capsulesRemaining: \(capsulesRemaining)") // для отладки
             if capsulesRemaining <= 0 && !isWinShown {
                 isWinShown = true
-                showWinScreen()
+                goToNextLevel()
             }
         }
     }
 
+    // новый уровень
     
+    func goToNextLevel() {
+        
+        backgroundMusicPlayer?.stop()
+        run(winSound)
+        
+        
+        // отображаем надпись
+        let winLabel = SKLabelNode(text: "YOU WIN")
+        winLabel.fontSize = 50
+        winLabel.fontColor = .yellow
+        winLabel.fontName = "Avenir-Black"
+        winLabel.position = CGPoint(x: frame.midX, y: frame.midY)
+        winLabel.zPosition = 100
+        addChild(winLabel)
+        
+        let winImage = SKSpriteNode(imageNamed: "krpw")
+        winImage.position = CGPoint(x: frame.midX, y: frame.midY - 80)
+        winImage.zPosition = 100
+        winImage.name = "krpw"
+        addChild(winImage)
+        
+        
+        // увеличиваем уровень и скорость шарика
+        currentLevel += 1
+        speedMultiplier *= 1.08 // 8%
+        
+        // удаляем шар
+        
+        burger.removeFromParent()
+        
+        let wait = SKAction.wait(forDuration: 3)
+        let nextLevelAction = SKAction.run {
+            winLabel.removeFromParent()
+            self.childNode(withName: "krpw")?.removeFromParent()
+            self.backgroundMusicPlayer?.play()
+            self.startLevel()
+        }
+        
+        run(SKAction.sequence([wait, nextLevelAction]))
+        
+    }
+    
+ 
     
     // победа в игре
     
@@ -319,6 +439,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // проигрыш
     
     func gameOver() {
+        
+        if isGameOver { return }
+        isGameOver = true
+        
+        backgroundMusicPlayer?.stop()
+        run(loseSound)
+        
         burger.removeFromParent()
         
         let gameOverLabel = SKLabelNode(text: "Game Over")
@@ -327,6 +454,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOverLabel.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(gameOverLabel)
         
+        
+        let gameOverImage = SKSpriteNode(imageNamed: "krpl")
+        gameOverImage.position = CGPoint(x: frame.midX, y: frame.midY - 80)
+        gameOverImage.zPosition = 100
+        gameOverImage.name = "krpl"
+        addChild(gameOverImage)
+        
+        
+        
+        // сбрасываем прогресс
+        currentLevel = 1
+        speedMultiplier = 1.0
+        
+        // автомат. рестарт через 3 секунды
+        let wait = SKAction.wait(forDuration: 3)
+        let restart = SKAction.run {
+            gameOverLabel.removeFromParent()
+            self.childNode(withName: "krpl")?.removeFromParent()
+            self.startLevel()
+        }
+        run(SKAction.sequence([wait, restart]))
         
     }
     
