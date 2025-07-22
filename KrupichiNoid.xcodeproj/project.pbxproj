@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,6 +20,8 @@
 		0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87792E2A5C6D0085C426 /* otrizh.wav */; };
 		0A8842C52E2B846200D9AB53 /* CapsuleExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */; };
 		0A8DCB352E2E530F00D87D4B /* 8bitfon.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB342E2E530F00D87D4B /* 8bitfon.wav */; };
+		0A8DCB372E2F70B600D87D4B /* win.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB362E2F70B600D87D4B /* win.wav */; };
+		0A8DCB3B2E2F736000D87D4B /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB3A2E2F736000D87D4B /* lose.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		0A4D87792E2A5C6D0085C426 /* otrizh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = otrizh.wav; sourceTree = "<group>"; };
 		0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CapsuleExplosion.sks; sourceTree = "<group>"; };
 		0A8DCB342E2E530F00D87D4B /* 8bitfon.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 8bitfon.wav; sourceTree = "<group>"; };
+		0A8DCB362E2F70B600D87D4B /* win.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win.wav; sourceTree = "<group>"; };
+		0A8DCB3A2E2F736000D87D4B /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +94,8 @@
 				0A4D87772E2A5C3C0085C426 /* platform.wav */,
 				0A4D87792E2A5C6D0085C426 /* otrizh.wav */,
 				0A8DCB342E2E530F00D87D4B /* 8bitfon.wav */,
+				0A8DCB362E2F70B600D87D4B /* win.wav */,
+				0A8DCB3A2E2F736000D87D4B /* lose.mp3 */,
 			);
 			path = music;
 			sourceTree = "<group>";
@@ -130,7 +136,7 @@
 				};
 			};
 			buildConfigurationList = 0A4D87532E2A267B0085C426 /* Build configuration list for PBXProject "KrupichiNoid" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -157,7 +163,9 @@
 				0A8842C52E2B846200D9AB53 /* CapsuleExplosion.sks in Resources */,
 				0A4D875E2E2A267B0085C426 /* GameScene.sks in Resources */,
 				0A4D87692E2A267D0085C426 /* Assets.xcassets in Resources */,
+				0A8DCB3B2E2F736000D87D4B /* lose.mp3 in Resources */,
 				0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */,
+				0A8DCB372E2F70B600D87D4B /* win.wav in Resources */,
 				0A4D876C2E2A267D0085C426 /* LaunchScreen.storyboard in Resources */,
 				0A8DCB352E2E530F00D87D4B /* 8bitfon.wav in Resources */,
 				0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */,
@@ -332,8 +340,8 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -364,8 +372,8 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

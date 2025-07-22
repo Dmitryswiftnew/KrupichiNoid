@@ -27,9 +27,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var isGameOver = false
     
     var backgroundMusicPlayer: AVAudioPlayer?
-    let winSound = SKAction.playSoundFileNamed("krpw", waitForCompletion: false)
-    let loseSound = SKAction.playSoundFileNamed("krpl", waitForCompletion: false)
+    let winSound = SKAction.playSoundFileNamed("win.wav", waitForCompletion: false)
+    let loseSound = SKAction.playSoundFileNamed("lose.mp3", waitForCompletion: false)
     
+    @objc func appDidEnterBackground() {
+        backgroundMusicPlayer?.pause()
+    }
+    
+    
+    @objc func appWillEnterForeground() {
+        if !isGameOver {
+            backgroundMusicPlayer?.play()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    
+    
+    
+    
+    
+    
+    func playBackgroundMusic(filename: String) {
+        
+        backgroundMusicPlayer?.stop()
+        backgroundMusicPlayer = nil
+        
+        if let bundle = Bundle.main.path(forResource: filename, ofType: nil) {
+            let musicURL = URL(fileURLWithPath: bundle)
+            do {
+                backgroundMusicPlayer = try AVAudioPlayer(contentsOf: musicURL)
+                backgroundMusicPlayer?.numberOfLoops = -1
+                backgroundMusicPlayer?.prepareToPlay()
+                backgroundMusicPlayer?.play()
+            } catch {
+                print("Could not load file: \(filename)")
+            }
+        }
+    }
     
     
     
@@ -39,33 +77,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundColor = .black
         
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(appDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Audio session setup failed: \(error)")
+        }
+        
+        
+        
+        
+        
         playBackgroundMusic(filename: "8bitfon.wav")
-        backgroundMusicPlayer?.play()
+        
         isGameOver = false
         
         
         
-        
-        
-        func playBackgroundMusic(filename: String) {
-            
-            backgroundMusicPlayer?.stop()
-            backgroundMusicPlayer = nil
-            
-            if let bundle = Bundle.main.path(forResource: filename, ofType: nil) {
-                let musicURL = URL(fileURLWithPath: bundle)
-                do {
-                    backgroundMusicPlayer = try AVAudioPlayer(contentsOf: musicURL)
-                    backgroundMusicPlayer?.numberOfLoops = -1
-                    backgroundMusicPlayer?.prepareToPlay()
-                    backgroundMusicPlayer?.play()
-                } catch {
-                    print("Could not load file: \(filename)")
-                }
-            }
-        }
-
-
         // добавление левала
         
         levelLabel = SKLabelNode(fontNamed: "Avenir-Black")
@@ -108,16 +145,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         borderPath.addLine(to: CGPoint(x: frame.maxX, y: frame.maxY))
         borderPath.addLine(to: CGPoint(x: frame.maxX, y: frame.minY))
         borderPath.closeSubpath()
-
+        
         physicsBody = SKPhysicsBody(edgeChainFrom: borderPath)
         physicsBody?.categoryBitMask = PhysicsCategory.border
         physicsBody?.friction = 0
         physicsBody?.restitution = 1
-
+        
         // Контейнер капсул
         capsuleLayer = SKNode()
         capsuleLayer.zPosition = 2
         addChild(capsuleLayer)
+        
+       
+    
+
         
         // Запускаем уровень (создание капсул и шарика)
         startLevel()
@@ -185,12 +226,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         
-        let capsuleWidth: CGFloat = 55
+        let capsuleWidth: CGFloat = 50
         let capsuleHeight: CGFloat = 24
         let rows = 4
         let columns = 6
         
-        let horizontalSpacing: CGFloat = 10
+        let horizontalSpacing: CGFloat = 8
         let verticalSpacing: CGFloat = 10
         
         // Вычисляем суммарную ширину ряда капсул с учетом отступов
@@ -341,7 +382,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // увеличиваем уровень и скорость шарика
         currentLevel += 1
-        speedMultiplier *= 1.08 // 8%
+        speedMultiplier *= 1.50 // 10%
         
         // удаляем шар
         
@@ -351,7 +392,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let nextLevelAction = SKAction.run {
             winLabel.removeFromParent()
             self.childNode(withName: "krpw")?.removeFromParent()
-            self.backgroundMusicPlayer?.play()
+            self.playBackgroundMusic(filename: "8bitfon.wav")
             self.startLevel()
         }
         
@@ -472,6 +513,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let restart = SKAction.run {
             gameOverLabel.removeFromParent()
             self.childNode(withName: "krpl")?.removeFromParent()
+            self.isGameOver = false
+            self.playBackgroundMusic(filename: "8bitfon.wav")
             self.startLevel()
         }
         run(SKAction.sequence([wait, restart]))
