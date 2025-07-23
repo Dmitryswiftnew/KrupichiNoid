@@ -27,8 +27,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var isGameOver = false
     
     var backgroundMusicPlayer: AVAudioPlayer?
-    let winSound = SKAction.playSoundFileNamed("win.wav", waitForCompletion: false)
-    let loseSound = SKAction.playSoundFileNamed("lose.mp3", waitForCompletion: false)
+    let winSound = SKAction.playSoundFileNamed("winM.mp3", waitForCompletion: false)
+    let loseSound = SKAction.playSoundFileNamed("loseM.mp3", waitForCompletion: false)
     
     @objc func appDidEnterBackground() {
         backgroundMusicPlayer?.pause()
@@ -248,7 +248,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for row in 0..<rows {
             for col in 0..<columns {
                 // Создаем капсулу (заменяем на картинку capsule)
-                let capsule = SKSpriteNode(imageNamed: "capsule")
+                let capsule = SKSpriteNode(imageNamed: "shawa")
                 capsule.size = CGSize(width: capsuleWidth, height: capsuleHeight)
                 capsule.name = "capsuleBrick"
 
@@ -295,7 +295,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                if let ball = firstBody.node as? SKSpriteNode {
                    correctBallAngle(ball)
                }
-            // 🔊 звук столкновения со стеной
+            //  звук столкновения со стеной
                     run(SKAction.playSoundFileNamed("stena.wav", waitForCompletion: false))
             
            }
@@ -323,10 +323,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let speed = sqrt(currentVelocity.dx * currentVelocity.dx + currentVelocity.dy * currentVelocity.dy)
             
             // Вычисляем скорость по X и Y
-            let dx = cos(bounceAngle) * speed
-            let dy = abs(sin(bounceAngle) * speed)  // всегда вверх
+            let dx = sin(bounceAngle) * speed
+            let dy = abs(cos(bounceAngle) * speed)  // всегда вверх
             
-            // 🔊 звук столкновения с платформой
+            // звук столкновения с платформой
                     run(SKAction.playSoundFileNamed("platform.wav", waitForCompletion: false))
             
             
@@ -339,8 +339,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             guard let capsuleNode = secondBody.node else { return }
             
-            // 🔊 звук столкновения с капсулой
-                    run(SKAction.playSoundFileNamed("otrizh.wav", waitForCompletion: false))
+            // звук столкновения с капсулой
+                    run(SKAction.playSoundFileNamed("fire.mp3", waitForCompletion: false))
             
             // Запускаем анимацию взрыва
             runCapsuleDestructionEffect(at: capsuleNode.position)
@@ -373,16 +373,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         winLabel.zPosition = 100
         addChild(winLabel)
         
-        let winImage = SKSpriteNode(imageNamed: "krpw")
-        winImage.position = CGPoint(x: frame.midX, y: frame.midY - 80)
-        winImage.zPosition = 100
-        winImage.name = "krpw"
-        addChild(winImage)
-        
-        
         // увеличиваем уровень и скорость шарика
         currentLevel += 1
-        speedMultiplier *= 1.50 // 10%
+        speedMultiplier *= 1.10 // 10%
         
         // удаляем шар
         
@@ -391,7 +384,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let wait = SKAction.wait(forDuration: 3)
         let nextLevelAction = SKAction.run {
             winLabel.removeFromParent()
-            self.childNode(withName: "krpw")?.removeFromParent()
             self.playBackgroundMusic(filename: "8bitfon.wav")
             self.startLevel()
         }
@@ -490,17 +482,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         burger.removeFromParent()
         
         let gameOverLabel = SKLabelNode(text: "Game Over")
-        gameOverLabel.fontSize = 50
+        gameOverLabel.fontSize = 80
         gameOverLabel.fontColor = .white
         gameOverLabel.position = CGPoint(x: frame.midX, y: frame.midY)
         addChild(gameOverLabel)
         
         
-        let gameOverImage = SKSpriteNode(imageNamed: "krpl")
-        gameOverImage.position = CGPoint(x: frame.midX, y: frame.midY - 80)
-        gameOverImage.zPosition = 100
-        gameOverImage.name = "krpl"
-        addChild(gameOverImage)
         
         
         
@@ -512,7 +499,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let wait = SKAction.wait(forDuration: 3)
         let restart = SKAction.run {
             gameOverLabel.removeFromParent()
-            self.childNode(withName: "krpl")?.removeFromParent()
             self.isGameOver = false
             self.playBackgroundMusic(filename: "8bitfon.wav")
             self.startLevel()
@@ -541,7 +527,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         guard let velocity = burger.physicsBody?.velocity else { return }
         
-        let maxSpeed: CGFloat = 750.0
+        let maxSpeed: CGFloat = 750.0 * speedMultiplier
         
         let speed = sqrt(velocity.dx * velocity.dx + velocity.dy * velocity.dy)
         
@@ -555,6 +541,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    
     
 }

@@ -17,15 +17,15 @@
 		0A4D876C2E2A267D0085C426 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D876A2E2A267D0085C426 /* LaunchScreen.storyboard */; };
 		0A4D87762E2A5C310085C426 /* stena.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87752E2A5C310085C426 /* stena.wav */; };
 		0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87772E2A5C3C0085C426 /* platform.wav */; };
-		0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A4D87792E2A5C6D0085C426 /* otrizh.wav */; };
+		0A7225472E30BD10001EFF8D /* fire.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A7225462E30BD10001EFF8D /* fire.mp3 */; };
 		0A8842C52E2B846200D9AB53 /* CapsuleExplosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */; };
 		0A8DCB352E2E530F00D87D4B /* 8bitfon.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB342E2E530F00D87D4B /* 8bitfon.wav */; };
-		0A8DCB372E2F70B600D87D4B /* win.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB362E2F70B600D87D4B /* win.wav */; };
-		0A8DCB3B2E2F736000D87D4B /* lose.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB3A2E2F736000D87D4B /* lose.mp3 */; };
+		0A8DCB3D2E30B86700D87D4B /* winM.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB3C2E30B86700D87D4B /* winM.mp3 */; };
+		0A8DCB3F2E30B86C00D87D4B /* loseM.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A8DCB3E2E30B86C00D87D4B /* loseM.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0A4D87582E2A267B0085C426 /* KrupichiNoid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KrupichiNoid.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A4D87582E2A267B0085C426 /* KrupkaNoid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KrupkaNoid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A4D875B2E2A267B0085C426 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0A4D875D2E2A267B0085C426 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		0A4D875F2E2A267B0085C426 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
@@ -36,11 +36,11 @@
 		0A4D876B2E2A267D0085C426 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A4D87752E2A5C310085C426 /* stena.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = stena.wav; sourceTree = "<group>"; };
 		0A4D87772E2A5C3C0085C426 /* platform.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = platform.wav; sourceTree = "<group>"; };
-		0A4D87792E2A5C6D0085C426 /* otrizh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = otrizh.wav; sourceTree = "<group>"; };
+		0A7225462E30BD10001EFF8D /* fire.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fire.mp3; sourceTree = "<group>"; };
 		0A8842C42E2B846200D9AB53 /* CapsuleExplosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CapsuleExplosion.sks; sourceTree = "<group>"; };
 		0A8DCB342E2E530F00D87D4B /* 8bitfon.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 8bitfon.wav; sourceTree = "<group>"; };
-		0A8DCB362E2F70B600D87D4B /* win.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = win.wav; sourceTree = "<group>"; };
-		0A8DCB3A2E2F736000D87D4B /* lose.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lose.mp3; sourceTree = "<group>"; };
+		0A8DCB3C2E30B86700D87D4B /* winM.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = winM.mp3; sourceTree = "<group>"; };
+		0A8DCB3E2E30B86C00D87D4B /* loseM.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = loseM.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 		0A4D874F2E2A267B0085C426 = {
 			isa = PBXGroup;
 			children = (
-				0A4D875A2E2A267B0085C426 /* KrupichiNoid */,
+				0A4D875A2E2A267B0085C426 /* KrupkaNoid */,
 				0A4D87592E2A267B0085C426 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,12 +65,12 @@
 		0A4D87592E2A267B0085C426 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0A4D87582E2A267B0085C426 /* KrupichiNoid.app */,
+				0A4D87582E2A267B0085C426 /* KrupkaNoid.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0A4D875A2E2A267B0085C426 /* KrupichiNoid */ = {
+		0A4D875A2E2A267B0085C426 /* KrupkaNoid */ = {
 			isa = PBXGroup;
 			children = (
 				0A4D875B2E2A267B0085C426 /* AppDelegate.swift */,
@@ -84,7 +84,7 @@
 				0A4D876A2E2A267D0085C426 /* LaunchScreen.storyboard */,
 				0A4D87722E2A588F0085C426 /* music */,
 			);
-			path = KrupichiNoid;
+			path = KrupkaNoid;
 			sourceTree = "<group>";
 		};
 		0A4D87722E2A588F0085C426 /* music */ = {
@@ -92,10 +92,10 @@
 			children = (
 				0A4D87752E2A5C310085C426 /* stena.wav */,
 				0A4D87772E2A5C3C0085C426 /* platform.wav */,
-				0A4D87792E2A5C6D0085C426 /* otrizh.wav */,
 				0A8DCB342E2E530F00D87D4B /* 8bitfon.wav */,
-				0A8DCB362E2F70B600D87D4B /* win.wav */,
-				0A8DCB3A2E2F736000D87D4B /* lose.mp3 */,
+				0A8DCB3C2E30B86700D87D4B /* winM.mp3 */,
+				0A8DCB3E2E30B86C00D87D4B /* loseM.mp3 */,
+				0A7225462E30BD10001EFF8D /* fire.mp3 */,
 			);
 			path = music;
 			sourceTree = "<group>";
@@ -103,9 +103,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0A4D87572E2A267B0085C426 /* KrupichiNoid */ = {
+		0A4D87572E2A267B0085C426 /* KrupkaNoid */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A4D876F2E2A267D0085C426 /* Build configuration list for PBXNativeTarget "KrupichiNoid" */;
+			buildConfigurationList = 0A4D876F2E2A267D0085C426 /* Build configuration list for PBXNativeTarget "KrupkaNoid" */;
 			buildPhases = (
 				0A4D87542E2A267B0085C426 /* Sources */,
 				0A4D87552E2A267B0085C426 /* Frameworks */,
@@ -115,9 +115,9 @@
 			);
 			dependencies = (
 			);
-			name = KrupichiNoid;
+			name = KrupkaNoid;
 			productName = KrupichiNoid;
-			productReference = 0A4D87582E2A267B0085C426 /* KrupichiNoid.app */;
+			productReference = 0A4D87582E2A267B0085C426 /* KrupkaNoid.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -135,7 +135,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0A4D87532E2A267B0085C426 /* Build configuration list for PBXProject "KrupichiNoid" */;
+			buildConfigurationList = 0A4D87532E2A267B0085C426 /* Build configuration list for PBXProject "KrupkaNoid" */;
 			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -148,7 +148,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0A4D87572E2A267B0085C426 /* KrupichiNoid */,
+				0A4D87572E2A267B0085C426 /* KrupkaNoid */,
 			);
 		};
 /* End PBXProject section */
@@ -163,12 +163,12 @@
 				0A8842C52E2B846200D9AB53 /* CapsuleExplosion.sks in Resources */,
 				0A4D875E2E2A267B0085C426 /* GameScene.sks in Resources */,
 				0A4D87692E2A267D0085C426 /* Assets.xcassets in Resources */,
-				0A8DCB3B2E2F736000D87D4B /* lose.mp3 in Resources */,
 				0A4D87782E2A5C3C0085C426 /* platform.wav in Resources */,
-				0A8DCB372E2F70B600D87D4B /* win.wav in Resources */,
 				0A4D876C2E2A267D0085C426 /* LaunchScreen.storyboard in Resources */,
+				0A8DCB3F2E30B86C00D87D4B /* loseM.mp3 in Resources */,
+				0A7225472E30BD10001EFF8D /* fire.mp3 in Resources */,
 				0A8DCB352E2E530F00D87D4B /* 8bitfon.wav in Resources */,
-				0A4D877A2E2A5C6D0085C426 /* otrizh.wav in Resources */,
+				0A8DCB3D2E30B86700D87D4B /* winM.mp3 in Resources */,
 				0A4D87602E2A267B0085C426 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,7 +347,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = vasilevVK.KrupichiNoid;
+				PRODUCT_BUNDLE_IDENTIFIER = vasilevVK.KrupkaiNoid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -379,7 +379,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = vasilevVK.KrupichiNoid;
+				PRODUCT_BUNDLE_IDENTIFIER = vasilevVK.KrupkaiNoid;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -394,7 +394,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0A4D87532E2A267B0085C426 /* Build configuration list for PBXProject "KrupichiNoid" */ = {
+		0A4D87532E2A267B0085C426 /* Build configuration list for PBXProject "KrupkaNoid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A4D876D2E2A267D0085C426 /* Debug */,
@@ -403,7 +403,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A4D876F2E2A267D0085C426 /* Build configuration list for PBXNativeTarget "KrupichiNoid" */ = {
+		0A4D876F2E2A267D0085C426 /* Build configuration list for PBXNativeTarget "KrupkaNoid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A4D87702E2A267D0085C426 /* Debug */,
